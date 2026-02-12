@@ -1,0 +1,19 @@
+{
+  "name": "linkbot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0",
+  "description": "",
+  "devDependencies": {
+    "axios": "^1.13.5",
+    "cypress": "^15.10.0"
+  }
+}
