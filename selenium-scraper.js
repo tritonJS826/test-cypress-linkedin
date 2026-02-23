@@ -123,6 +123,21 @@ async function run() {
     console.log('Page loaded, waiting for content...');
     await driver.sleep(5000);
     
+    console.log('\n=== Manual Login Required ===');
+    console.log('Please enter your LinkedIn email and password now.');
+    console.log('Press Enter when you have successfully logged in...');
+    
+    const waitForLogin = () => new Promise(resolve => {
+      const onData = () => {
+        process.stdin.off('data', onData);
+        resolve(true);
+      };
+      process.stdin.on('data', onData);
+    });
+    
+    await waitForLogin();
+    console.log('Continuing with scraping...\n');
+    
     // Check if we hit a bot detection page
     const pageTitle = await driver.getTitle();
     console.log('Page title:', pageTitle);
