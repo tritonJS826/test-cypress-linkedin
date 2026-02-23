@@ -129,8 +129,30 @@ async function run() {
     
     if (pageTitle.includes('Sorry') || pageTitle.includes('Verify') || pageTitle.includes('captcha')) {
       console.log('⚠️  Bot detection triggered! Please solve the CAPTCHA manually.');
-      console.log('Once solved, press Enter in the terminal to continue...');
-      await new Promise(resolve => process.stdin.once('data', resolve));
+      console.log('You have 10 minutes to solve it. Press Enter when done, or wait for timeout...');
+      
+      const timeoutMs = 10 * 60 * 1000;
+      const startTime = Date.now();
+      
+      const waitForInput = () => new Promise(resolve => {
+        const onData = () => {
+          process.stdin.off('data', onData);
+          resolve(true);
+        };
+        process.stdin.on('data', onData);
+      });
+      
+      const checkTimeout = () => new Promise(resolve => {
+        setTimeout(() => resolve(false), timeoutMs);
+      });
+      
+      const userPressedEnter = await Promise.race([waitForInput(), checkTimeout()]);
+      
+      if (!userPressedEnter) {
+        console.log('⏰ Timeout reached (10 minutes). Continuing anyway...');
+      } else {
+        console.log('Continuing...');
+      }
     }
     
     fs.writeFileSync(config.outputFile, 'LinkedIn Posts from IT Career Hub\n==============================\n\n', 'utf8');
